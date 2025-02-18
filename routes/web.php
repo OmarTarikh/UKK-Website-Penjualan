@@ -5,9 +5,20 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\DetailPenjualanController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
+
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
+
+Route::get('penjualan/export-pdf', [PenjualanController::class, 'exportPDF'])->name('penjualan.exportPDF');
+Route::get('detailpenjualan/export-pdf', [DetailPenjualanController::class, 'exportPDF'])->name('detailpenjualan.exportPDF');
+
+Route::get('/', function () {
+    return auth()->check() ? redirect()->route('dashboard') : redirect()->route('welcome');
+});
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -28,13 +39,5 @@ Route::middleware(['auth'])->group(function () {
     ->name('detailpenjualan.getTotalHarga');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 });
-
-
-Route::get('penjualan/export-pdf', [PenjualanController::class, 'exportPDF'])->name('penjualan.exportPDF');
-Route::get('detailpenjualan/export-pdf', [DetailPenjualanController::class, 'exportPDF'])->name('detailpenjualan.exportPDF');
-
-Route::get('/welcome', function () {
-    return view('welcome');
-})->name('welcome');
-

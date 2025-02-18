@@ -9,12 +9,12 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Support\Facades\DB; // untuk memanggil store procedure
+use Illuminate\Support\Facades\DB; // Query Builder untuk memanggil store procedure
 
 class PenjualanController extends Controller
 {
     /**
-     *
+     * Display a listing of penjualan.
      *
      * @return View
      */
@@ -49,7 +49,6 @@ class PenjualanController extends Controller
             'PelangganID' => 'required|exists:pelanggan,PelangganID',
         ]);
 
-        // Panggil store procedure TambahPenjualan
         DB::statement("CALL InsertPenjualan(?, ?)", [
             $validated['TanggalPenjualan'],
             $validated['PelangganID']
@@ -113,7 +112,6 @@ class PenjualanController extends Controller
      */
     public function destroy($id): RedirectResponse
     {
-        // Panggil store procedure HapusPenjualan
         DB::statement("CALL DeletePenjualan(?)", [$id]);
 
         return redirect()->route('penjualan.index')->with('success', 'Penjualan berhasil dihapus!');
